@@ -34,8 +34,8 @@ with open("README.md") as readme_file:
 
 install_requires = [
     "PyYAML",
-    "pydantic",
-    "pydantic-yaml",
+    "pydantic==1.8.2",
+    "pydantic-yaml==0.4.3",
     "pyxdg",
     "requests",
     "requests-unixsocket",
@@ -88,7 +88,7 @@ extras_requires = {
 
 setup(
     name="craft-parts",
-    version="1.1.0",
+    version="1.1.1",
     description="Craft parts tooling",
     long_description=readme,
     author="Canonical Ltd.",
