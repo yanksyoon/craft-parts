@@ -16,6 +16,7 @@
 
 """The setup script."""
 
+
 from setuptools import find_packages, setup  # type: ignore
 
 
@@ -34,8 +35,8 @@ with open("README.md") as readme_file:
 
 install_requires = [
     "PyYAML",
-    "pydantic==1.8.2",
-    "pydantic-yaml==0.4.3",
+    "pydantic",
+    "pydantic-yaml",
     "pyxdg",
     "requests",
     "requests-unixsocket",
@@ -67,9 +68,7 @@ test_requires = [
     "isort",
     "mypy",
     "pydocstyle",
-    # Incompatible with current pylint-fixme-info==1.0.2
-    # https://github.com/PyCQA/pylint/issues/5390
-    "pylint<2.12.0",
+    "pylint",
     "pylint-fixme-info",
     "pylint-pytest",
     "pytest",
@@ -88,12 +87,12 @@ extras_requires = {
 
 setup(
     name="craft-parts",
-    version="1.1.1",
+    version="1.1.2",
     description="Craft parts tooling",
     long_description=readme,
     author="Canonical Ltd.",
     author_email="snapcraft@lists.snapcraft.io",
-    url="https://github.com/canonical/craft_parts",
+    url="https://github.com/canonical/craft-parts",
     license="GNU General Public License v3",
     python_requires=">=3.7",
     classifiers=[
