@@ -9,7 +9,7 @@ sphinx-autodoc-typehints==1.20.0
 sphinx-jsonschema==1.19.1
 sphinx-pydantic==0.1.1
 sphinxcontrib-applehelp==1.0.2
-sphinx_design==0.3.0
+sphinx_design==0.6.1
 sphinxcontrib-details-directive==0.1.0
 sphinxcontrib-devhelp==1.0.2
 sphinxcontrib-htmlhelp==2.0.0
