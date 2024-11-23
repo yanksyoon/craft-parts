@@ -89,7 +89,7 @@ test_requires = [
     "hypothesis",
     "jsonschema",
     "pydocstyle",
-    "pyright==1.1.385",
+    "pyright==1.1.389",
     "pytest",
     "pytest-check",
     "pytest-cov",
