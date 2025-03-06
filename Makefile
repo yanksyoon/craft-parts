@@ -30,6 +30,7 @@ clean: ## Clean artifacts from building, testing, etc.
 	rm -f .coverage
 	rm -rf htmlcov/
 	rm -rf .pytest_cache
+	sudo snap remove devpack-for-spring
 
 .PHONY: coverage
 coverage: ## Run pytest with coverage report.
@@ -89,6 +90,11 @@ test-flake8:
 .PHONY: test-ruff
 test-ruff:
 	ruff check $(SOURCES)
+
+.PHONY: setup-integrations
+setup-integrations: # Setup dependencies for integration tests
+## Required for spring-boot plugin integration tests
+	sudo snap install devpack-for-spring --edge --classic
 
 .PHONY: test-integrations
 test-integrations: ## Run integration tests.
