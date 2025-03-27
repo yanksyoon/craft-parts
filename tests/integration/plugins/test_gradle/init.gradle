@@ -1,3 +1,6 @@
-def name = project.hasProperty('name') ? project.property('name') : 'World'
-def outputFile = new File("${projectDir}/test.txt")
-outputFile.text = "hello ${name} from init script"
+tasks.register('testWrite') {
+    doLast {
+        def outputFile = new File("${project.buildDir}/test.txt")
+        outputFile.text = "hello world"
+    }
+}
