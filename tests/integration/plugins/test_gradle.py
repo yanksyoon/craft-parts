@@ -18,7 +18,6 @@ import subprocess
 import textwrap
 from pathlib import Path
 
-import pytest
 import yaml
 
 from craft_parts import LifecycleManager, Step
@@ -58,7 +57,7 @@ def test_gradle_plugin(new_dir, monkeypatch, partitions):
             plugin: gradle
             gradle-task: build
             gradle-init-script: init.gradle
-            gradle-init-script-parameters: [-Pname=test]
+            gradle-init-script-parameters: [testWrite]
             source: {source_location}
             build-packages: [gradle, default-jdk]
             stage-packages: [default-jre-headless]
