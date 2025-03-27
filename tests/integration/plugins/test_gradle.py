@@ -45,6 +45,7 @@ def test_gradle_plugin_gradlew(new_dir, monkeypatch, partitions):
     monkeypatch.setenv("http_proxy", "abc")
     monkeypatch.setenv("https_proxy", "def")
     monkeypatch.setenv("no_proxy", "localhost")
+    monkeypatch.setenv("GRADLE_USER_HOME", f"{new_dir}/parts/foo/build/.gradle")
     parts_yaml = textwrap.dedent(
         f"""
         parts:
