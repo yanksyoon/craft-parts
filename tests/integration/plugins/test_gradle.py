@@ -115,6 +115,7 @@ def _execute_plugin(parts, new_dir, partitions) -> LifecycleManager:
     return lf
 
 
+@pytest.fixture
 def setup_gradle_test(monkeypatch):
     source_location = Path(__file__).parent / "test_gradle"
     monkeypatch.chdir(source_location)
