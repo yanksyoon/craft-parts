@@ -48,34 +48,42 @@ def test_gradle_plugin(new_dir, monkeypatch, partitions):
     """
     source_location = Path(__file__).parent / "test_gradle"
     monkeypatch.chdir(source_location)
-
-    # 1. When gradlew executable file exists: use gradlew.
-    _test_gradle_plugin(
-        new_dir=new_dir, source_location=source_location, partitions=partitions
-    )
-
-    (source_location / "gradlew").unlink(missing_ok=True)
-
-    # 2. When gradlew executable file does not exist: use system gradle.
-    _test_gradle_plugin(
-        new_dir=new_dir, source_location=source_location, partitions=partitions
-    )
-
-
-def _test_gradle_plugin(new_dir, source_location, partitions):
-
     parts_yaml = textwrap.dedent(
         f"""
         parts:
           foo:
             plugin: gradle
             gradle-task: build
+            gradle-init-script: init.gradle
+            gradle-init-script-parameters: [-Pname=test]
             source: {source_location}
+            build-environments:
+                - http_proxy: abc
+                - https_proxy: def
+                - no_proxy: localhost
             build-packages: [gradle, default-jdk]
             stage-packages: [default-jre-headless]
         """
     )
     parts = yaml.safe_load(parts_yaml)
+
+    # 1. When gradlew executable file exists: use gradlew.
+    lf = _execute_plugin(parts=parts, new_dir=new_dir, partitions=partitions)
+    prime_dir = lf.project_info.prime_dir
+    java_binary = Path(prime_dir, "bin", "java")
+    assert java_binary.is_file()
+
+    output = subprocess.check_output(
+        [str(java_binary), "-jar", f"{prime_dir}/jar/HelloWorld-1.0.jar"], text=True
+    )
+    assert output.strip() == "Hello from Gradle-built Java"
+
+    # 2. When gradlew executable file does not exist: use system gradle.
+    (source_location / "gradlew").unlink(missing_ok=True)
+    lf = _execute_plugin(parts=parts, new_dir=new_dir, partitions=partitions)
+
+
+def _execute_plugin(parts, new_dir, partitions) -> LifecycleManager:
     lf = LifecycleManager(
         parts,
         application_name="test_ant",
@@ -88,11 +96,4 @@ def _test_gradle_plugin(new_dir, source_location, partitions):
     with lf.action_executor() as ctx:
         ctx.execute(actions)
 
-    prime_dir = lf.project_info.prime_dir
-    java_binary = Path(prime_dir, "bin", "java")
-    assert java_binary.is_file()
-
-    output = subprocess.check_output(
-        [str(java_binary), "-jar", f"{prime_dir}/jar/HelloWorld-1.0.jar"], text=True
-    )
-    assert output.strip() == "Hello from Gradle-built Java"
+    return lf

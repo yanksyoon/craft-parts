@@ -1,0 +1,3 @@
+def name = project.hasProperty('name') ? project.property('name') : 'World'
+def outputFile = new File("${projectDir}/test.txt")
+outputFile.text = "hello ${name} from init script"
