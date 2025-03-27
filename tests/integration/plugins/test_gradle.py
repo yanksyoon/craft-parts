@@ -115,12 +115,18 @@ def _execute_plugin(parts, new_dir, partitions) -> LifecycleManager:
     return lf
 
 
-def test_gradlew_plugin_gradle(new_dir, monkeypatch, partitions):
+def setup_gradle_test(monkeypatch):
     source_location = Path(__file__).parent / "test_gradle"
     monkeypatch.chdir(source_location)
-    monkeypatch.setenv("http_proxy", "abc")
-    monkeypatch.setenv("https_proxy", "def")
-    monkeypatch.setenv("no_proxy", "localhost")
+    gradlew_path = source_location / "gradlew"
+    gradlew_path.rename(source_location / "gradlew.backup")
+    yield
+    gradlew_path.rename(source_location / "gradlew")
+
+
+@pytest.mark.usefixtures("setup_gradle_test")
+def test_gradle_plugin_gradle(new_dir, partitions):
+    source_location = Path(__file__).parent / "test_gradle"
     parts_yaml = textwrap.dedent(
         f"""
         parts:
