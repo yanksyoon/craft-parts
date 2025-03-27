@@ -243,7 +243,7 @@ class GradlePlugin(JavaPlugin):
         if not any(k in os.environ for k in ("http_proxy", "https_proxy")):
             return
 
-        gradle_user_home = self._part_info.part_build_dir / ".gradle"
+        gradle_user_home = self._part_info.part_build_dir / ".parts/.gradle"
         gradle_user_home.mkdir(parents=True, exist_ok=True)
         gradle_properties = gradle_user_home / "gradle.properties"
         for protocol in ("http", "https"):
