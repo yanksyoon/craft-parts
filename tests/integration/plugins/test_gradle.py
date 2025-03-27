@@ -18,6 +18,7 @@ import subprocess
 import textwrap
 from pathlib import Path
 
+import pytest
 import yaml
 
 from craft_parts import LifecycleManager, Step
@@ -39,12 +40,34 @@ from craft_parts import LifecycleManager, Step
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def test_gradle_plugin_gradlew(new_dir, monkeypatch, partitions):
+def local_proxy_url():
+    conf_file = Path("proxy.conf")
+    conf_file.write_text(
+        """
+Port 8888
+Timeout 600
+DefaultErrorFile "/usr/share/tinyproxy/default.html"
+StatFile "/usr/share/tinyproxy/stats.html"
+LogFile "/var/log/tinyproxy/tinyproxy.log"
+LogLevel Info
+PidFile "/run/tinyproxy/tinyproxy.pid"
+MaxClients 100
+Allow 127.0.0.1
+Allow ::1
+ViaProxyName "tinyproxy"
+    """,
+        encoding="utf-8",
+    )
+    proc = subprocess.Popen(["sudo", "tinyproxy", "-d", str(conf_file)])
+    yield "http://localhost:8888"
+    proc.kill()
+
+
+def test_gradle_plugin_gradlew(new_dir, monkeypatch, partitions, local_proxy_url):
     source_location = Path(__file__).parent / "test_gradle"
     monkeypatch.chdir(source_location)
-    monkeypatch.setenv("http_proxy", "abc")
-    monkeypatch.setenv("https_proxy", "def")
-    monkeypatch.setenv("no_proxy", "localhost")
+    monkeypatch.setenv("http_proxy", local_proxy_url)
+    monkeypatch.setenv("https_proxy", local_proxy_url)
     monkeypatch.setenv("GRADLE_USER_HOME", f"{new_dir}/parts/foo/build/.gradle")
     parts_yaml = textwrap.dedent(
         f"""
