@@ -58,9 +58,9 @@ def test_gradle_plugin(new_dir, monkeypatch, partitions):
             gradle-init-script-parameters: [-Pname=test]
             source: {source_location}
             build-environments:
-                - http_proxy: abc
-                - https_proxy: def
-                - no_proxy: localhost
+                http_proxy: abc
+                https_proxy: def
+                no_proxy: localhost
             build-packages: [gradle, default-jdk]
             stage-packages: [default-jre-headless]
         """
