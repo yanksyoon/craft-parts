@@ -40,6 +40,7 @@ from craft_parts import LifecycleManager, Step
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+@pytest.fixture
 def local_proxy_url():
     conf_file = Path("proxy.conf")
     conf_file.write_text(
