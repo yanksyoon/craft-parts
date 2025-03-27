@@ -48,6 +48,9 @@ def test_gradle_plugin(new_dir, monkeypatch, partitions):
     """
     source_location = Path(__file__).parent / "test_gradle"
     monkeypatch.chdir(source_location)
+    monkeypatch.setenv("http_proxy", "abc")
+    monkeypatch.setenv("https_proxy", "def")
+    monkeypatch.setenv("no_proxy", "localhost")
     parts_yaml = textwrap.dedent(
         f"""
         parts:
@@ -57,10 +60,6 @@ def test_gradle_plugin(new_dir, monkeypatch, partitions):
             gradle-init-script: init.gradle
             gradle-init-script-parameters: [-Pname=test]
             source: {source_location}
-            build-environments:
-                http_proxy: abc
-                https_proxy: def
-                no_proxy: localhost
             build-packages: [gradle, default-jdk]
             stage-packages: [default-jre-headless]
         """
